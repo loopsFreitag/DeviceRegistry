@@ -1,0 +1,25 @@
+###########################################################################################
+# This is just a template file
+# Copy it as "config-development.yml" and start changing the copy accordingly as the actual config file.
+###########################################################################################
+
+# Database
+db:
+  host: host.docker.internal
+  name: development
+  user: postgres
+  password: postgres
+  port: 5432
+  ssl-mode: disable
+
+# App Server
+port: 8081
+ui-server: http://host.docker.internal:3000
+
+# OpenApi
+openapi:
+  path: api/openapi.yaml
+
+# Logger
+log:
+  level: 5

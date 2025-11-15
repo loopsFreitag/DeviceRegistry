@@ -1,0 +1,47 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: deviceregistry
+      POSTGRES_PASSWORD: deviceregistry123
+      POSTGRES_DB: deviceregistry
+    ports:
+      - "5432:5432"
+    volumes:
+      - local-postgres-data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - common-infra
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U deviceregistry"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  deviceregistry:
+    container_name: deviceregistry
+    image: deviceregistry:dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - "8081:8081"
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - common-infra
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  local-postgres-data:
+
+networks:
+  common-infra:
+    external: true
