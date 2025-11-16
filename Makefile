@@ -1,4 +1,4 @@
-.PHONY: help setup build swagger up down restart logs migrate-up shell clean build-docker update
+.PHONY: help setup build swagger up down restart logs migrate-up shell clean build-docker update test test-coverage
 
 help:
 	@echo "Available commands:"
@@ -14,6 +14,8 @@ help:
 	@echo "  make migrate-up     - Migration up"
 	@echo "  make clean          - Remove containers and volumes"
 	@echo "  make update         - Rebuild and update running container"
+	@echo "  make test           - Run all test"
+	@echo "  make test-coverage  - Build test coverage report"
 
 setup:
 	@docker network create common-infra 2>/dev/null || echo "Network common-infra already exists"
@@ -59,3 +61,11 @@ clean:
 
 update: swagger
 	docker compose up -d --build deviceregistry
+
+test:
+	go test -v ./...
+
+test-coverage:
+	@go test -v -coverprofile=coverage.out ./...
+	@go tool cover -html=coverage.out -o coverage.html
+	@which open > /dev/null && open coverage.html || which xdg-open > /dev/null && xdg-open coverage.html || echo "Please open coverage.html manually"

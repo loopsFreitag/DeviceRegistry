@@ -1,1 +1,3 @@
 config-development.yml
+coverage**
+.env

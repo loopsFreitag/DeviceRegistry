@@ -93,8 +93,8 @@ type HealthCheck struct {
 }
 
 func (h HealthCheck) SetRoutes(r *mux.Router) {
-	r.HandleFunc("/api/healthz", h.checkHealth).Methods(http.MethodGet)
-	r.HandleFunc("/api/readyz", h.checkReady).Methods(http.MethodGet)
+	r.HandleFunc("/healthz", h.checkHealth).Methods(http.MethodGet)
+	r.HandleFunc("/readyz", h.checkReady).Methods(http.MethodGet)
 }
 
 // CheckHealth godoc
@@ -105,7 +105,7 @@ func (h HealthCheck) SetRoutes(r *mux.Router) {
 // @Produce      json
 // @Success      200  {object}  HealthResponse
 // @Failure      500  {object}  ErrorResponse
-// @Router       /api/healthz [get]
+// @Router       /healthz [get]
 func (h HealthCheck) checkHealth(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -123,7 +123,7 @@ func (h HealthCheck) checkHealth(w http.ResponseWriter, r *http.Request) {
 // @Success      200  {object}  HealthResponse
 // @Failure      500  {object}  ErrorResponse
 // @Failure      503  {object}  ErrorResponse
-// @Router       /api/readyz [get]
+// @Router       /readyz [get]
 func (h HealthCheck) checkReady(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 

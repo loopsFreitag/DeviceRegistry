@@ -15,14 +15,18 @@ func NewAppRouter() *mux.Router {
 	router := mux.NewRouter()
 
 	userRepo := repository.NewUserRepository(model.DBX())
-
 	authService := service.NewAuthService(userRepo)
 
-	// authMiddleware := NewAuthMiddleware(authService)
+	authMiddleware := NewAuthMiddleware(authService)
 
 	// Public routes
 	controller.NewHealthCheck(controller.WithDBChecker()).SetRoutes(router)
 	controller.NewAuthController(authService).SetRoutes(router)
+
+	// Protected routes
+	protectedRouter := router.PathPrefix("/api").Subrouter()
+	protectedRouter.Use(authMiddleware.RequireAuth)
+	controller.NewDeviceController().SetRoutes(protectedRouter)
 
 	// Swagger
 	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)

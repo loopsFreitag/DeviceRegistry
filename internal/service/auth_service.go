@@ -16,6 +16,13 @@ var (
 	ErrUserNotFound       = repository.ErrUserNotFound
 )
 
+// i love how go auto matches interface with implementations
+type AuthServiceInterface interface {
+	CreateUser(email, password string) (*model.User, error)
+	Login(email, password string) (*model.User, error)
+	GetUserByID(userID uuid.UUID) (*model.User, error)
+}
+
 type AuthService struct {
 	userRepo repository.UserRepository
 }

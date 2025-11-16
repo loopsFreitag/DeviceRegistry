@@ -51,3 +51,9 @@ func (s *SessionStore) Get(sessionID string) (*Session, bool) {
 	}
 	return session, true
 }
+
+func (s *SessionStore) Delete(sessionID string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	delete(s.sessions, sessionID)
+}

@@ -42,6 +42,35 @@ definitions:
         example: securepassword123
         type: string
     type: object
+  model.Device:
+    properties:
+      brand:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      state:
+        $ref: '#/definitions/model.DeviceState'
+      updated_at:
+        type: string
+    required:
+    - brand
+    - name
+    - state
+    type: object
+  model.DeviceState:
+    enum:
+    - 0
+    - 1
+    - 2
+    type: integer
+    x-enum-varnames:
+    - StateInactive
+    - StateAvailable
+    - StateInUse
   model.User:
     properties:
       created_at:
@@ -56,7 +85,136 @@ definitions:
 info:
   contact: {}
 paths:
-  /api/auth/login:
+  /api/devices:
+    get:
+      description: Retrieve devices with optional filters for brand and state
+      parameters:
+      - description: Filter by brand
+        in: query
+        name: brand
+        type: string
+      - description: Filter by state (inactive, available, in-use)
+        in: query
+        name: state
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Device'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      summary: Get devices
+      tags:
+      - devices
+    post:
+      consumes:
+      - application/json
+      description: Create a new device with the provided details
+      parameters:
+      - description: Device details
+        in: body
+        name: device
+        required: true
+        schema:
+          $ref: '#/definitions/model.Device'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Device'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      summary: Create a new device
+      tags:
+      - devices
+    put:
+      consumes:
+      - application/json
+      description: Update the details of an existing device
+      parameters:
+      - description: Updated device details
+        in: body
+        name: device
+        required: true
+        schema:
+          $ref: '#/definitions/model.Device'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Device'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      summary: Update an existing device
+      tags:
+      - devices
+  /api/devices/{id}:
+    delete:
+      description: Delete a device using its ID
+      parameters:
+      - description: Device ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      summary: Delete a device by ID
+      tags:
+      - devices
+    get:
+      description: Retrieve the details of a device by its ID
+      parameters:
+      - description: Device ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Device'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      summary: Get a device by ID
+      tags:
+      - devices
+  /auth/login:
     post:
       consumes:
       - application/json
@@ -90,7 +248,7 @@ paths:
       summary: Login
       tags:
       - auth
-  /api/auth/register:
+  /auth/register:
     post:
       consumes:
       - application/json
@@ -124,7 +282,7 @@ paths:
       summary: Register a new user
       tags:
       - auth
-  /api/healthz:
+  /healthz:
     get:
       consumes:
       - application/json
@@ -143,7 +301,7 @@ paths:
       summary: Health check endpoint
       tags:
       - health
-  /api/readyz:
+  /readyz:
     get:
       consumes:
       - application/json

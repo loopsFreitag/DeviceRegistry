@@ -16,11 +16,11 @@ const (
 )
 
 type AuthController struct {
-	authService *service.AuthService
+	authService service.AuthServiceInterface
 	sessions    *model.SessionStore
 }
 
-func NewAuthController(authService *service.AuthService) *AuthController {
+func NewAuthController(authService service.AuthServiceInterface) *AuthController {
 	return &AuthController{
 		authService: authService,
 		sessions:    model.GetSessionStore(),
@@ -28,8 +28,8 @@ func NewAuthController(authService *service.AuthService) *AuthController {
 }
 
 func (ac *AuthController) SetRoutes(r *mux.Router) {
-	r.HandleFunc("/api/auth/register", ac.Register).Methods(http.MethodPost)
-	r.HandleFunc("/api/auth/login", ac.Login).Methods(http.MethodPost)
+	r.HandleFunc("/auth/register", ac.Register).Methods(http.MethodPost)
+	r.HandleFunc("/auth/login", ac.Login).Methods(http.MethodPost)
 }
 
 // RegisterRequest represents the registration request body
@@ -61,7 +61,7 @@ type AuthResponse struct {
 // @Failure      400      {object}  ErrorResponse
 // @Failure      409      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
-// @Router       /api/auth/register [post]
+// @Router       /auth/register [post]
 func (ac *AuthController) Register(w http.ResponseWriter, r *http.Request) {
 	var req RegisterRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -102,7 +102,7 @@ func (ac *AuthController) Register(w http.ResponseWriter, r *http.Request) {
 // @Failure      400      {object}  ErrorResponse
 // @Failure      401      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
-// @Router       /api/auth/login [post]
+// @Router       /auth/login [post]
 func (ac *AuthController) Login(w http.ResponseWriter, r *http.Request) {
 	var req LoginRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
