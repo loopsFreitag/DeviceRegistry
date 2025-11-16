@@ -1,0 +1,334 @@
+{
+  "name": "DeviceRegistry",
+  "version": "1",
+  "items": [
+    {
+      "type": "http",
+      "name": "healthz",
+      "filename": "healthz.bru",
+      "seq": 1,
+      "settings": {
+        "encodeUrl": true,
+        "timeout": 0
+      },
+      "tags": [],
+      "examples": [],
+      "request": {
+        "url": "{{URLUNP}}/healthz",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "folder",
+      "name": "user",
+      "filename": "user",
+      "seq": 2,
+      "examples": [],
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "user",
+          "seq": 2
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "create user",
+          "filename": "create user.bru",
+          "seq": 1,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "{{URLUNP}}/auth/register",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"email\": \"glfreitas@pm.me\",\n  \"password\": \"securepassword123\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "login",
+          "filename": "login.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "{{URLUNP}}/auth/login",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"email\": \"glfreitas@pm.me\",\n  \"password\": \"securepassword123\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "devices",
+      "filename": "devices",
+      "seq": 3,
+      "examples": [],
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "devices",
+          "seq": 3
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "get devices",
+          "filename": "get devices.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "{{URL}}/devices?brand=Apple&state=available",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "brand",
+                "value": "Apple",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "state",
+                "value": "available",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "create device",
+          "filename": "create device.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "{{URL}}/devices",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"name\": \"teste2\",\n  \"brand\": \"teste2\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "get device by id",
+          "filename": "get device by id.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "{{URL}}/devices/:id",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "id",
+                "value": "7d5d21ca-3604-403f-b94f-b14f50d3c0b9",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "delete device",
+          "filename": "delete device.bru",
+          "seq": 4,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "{{URL}}/devices/:id",
+            "method": "DELETE",
+            "headers": [],
+            "params": [
+              {
+                "name": "id",
+                "value": "7d5d21ca-3604-403f-b94f-b14f50d3c0b9",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "environments": [],
+  "root": {
+    "request": {
+      "vars": {
+        "req": [
+          {
+            "name": "URL",
+            "value": "http://localhost:8081/api",
+            "enabled": true,
+            "local": false,
+            "uid": "aqRUk3XkByR7LuScRtXwA"
+          },
+          {
+            "name": "URLUNP",
+            "value": "http://localhost:8081",
+            "enabled": true,
+            "local": false,
+            "uid": "7OsbC3aFDJddvQ19Db3Oa"
+          }
+        ]
+      }
+    }
+  },
+  "brunoConfig": {
+    "version": "1",
+    "name": "DeviceRegistry",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ],
+    "size": 0.0007295608520507812,
+    "filesCount": 5
+  }
+}

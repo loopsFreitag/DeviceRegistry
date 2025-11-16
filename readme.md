@@ -1,7 +1,39 @@
 ## Table of contents
 
+- [Documentation](#documentation)
+- [Collection](#collection)
+- [Setup](#setup)
 - [Development](#development)
 - [DB Migration](#db-migration)
+- [Makefile](#makefile)
+
+## Documentation
+
+You can view the API documentation here:  
+[http://localhost:8081/swagger/index.html#/](http://localhost:8081/swagger/index.html#/)
+
+All files are also available in the [`docs/`](./docs/) folder.
+
+## Collection
+Theres also both Bruno and a Postman collection under [`docs/`](./docs/) folder
+
+## Setup
+
+Setting up its as simple as copying both config file by 
+
+```bash
+$ cp config.tpl.yml config-development.yml
+```
+
+```bash
+$ cp .env.template .env
+```
+
+and then spining up the services with 
+
+```bash
+$ make up
+```
 
 ## Development
 
@@ -14,6 +46,10 @@ instance:
 
 ```bash
 $ cp config.tpl.yml config-development.yml
+```
+
+```bash
+$ cp .env.template .env
 ```
 
 The naming convention for the config files here is important, because this is the way the configuration
@@ -66,12 +102,33 @@ If you want to update the image artifact with your recent code changes and spin 
 $ make docker-update
 ```
 
+#### Run tests
+
+If you want to run all tests:
+
+```shell
+$ make test
+```
+
+#### Run tests
+
+If you want to see test coverage:
+
+```shell
+$ make test-coverage
+```
+
 ## DB Migration
 
+- `make migrate up` to migrate up
 - `go run main.go migrate help` to display migration help
-- `go run main.go migrate up` to migrate up
+- `go run main.go migrate up` also to migrate up
 - `go run main.go migrate up-by-one` to migrate up by one step
 - `go run main.go migrate down` to migrate down
 - `go run main.go migrate status` to display migration status
 - `go run main.go --env=test migrate` to migrate in another environment (here: `test`)
 
+## Makefile
+
+You can see all make make helpers simply by typing 
+`make`

@@ -1,0 +1,242 @@
+{
+  "info": {
+    "name": "DeviceRegistry",
+    "description": "",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "healthz",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{URLUNP}}/healthz",
+          "protocol": "",
+          "host": [
+            "{{URLUNP}}"
+          ],
+          "path": [
+            "healthz"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "user",
+      "item": [
+        {
+          "name": "create user",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{URLUNP}}/auth/register",
+              "protocol": "",
+              "host": [
+                "{{URLUNP}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"glfreitas@pm.me\",\n  \"password\": \"securepassword123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{URLUNP}}/auth/login",
+              "protocol": "",
+              "host": [
+                "{{URLUNP}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"glfreitas@pm.me\",\n  \"password\": \"securepassword123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "devices",
+      "item": [
+        {
+          "name": "get devices",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{URL}}/devices?brand=Apple&state=available",
+              "protocol": "",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "devices?brand=Apple&state=available"
+              ],
+              "query": [
+                {
+                  "key": "brand",
+                  "value": "Apple"
+                },
+                {
+                  "key": "state",
+                  "value": "available"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "create device",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{URL}}/devices",
+              "protocol": "",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "devices"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"teste2\",\n  \"brand\": \"teste2\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "get device by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{URL}}/devices/:id",
+              "protocol": "",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "devices",
+                ":id"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "7d5d21ca-3604-403f-b94f-b14f50d3c0b9"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "delete device",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{URL}}/devices/:id",
+              "protocol": "",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "devices",
+                ":id"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "7d5d21ca-3604-403f-b94f-b14f50d3c0b9"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "URLUNP",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "URL",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
