@@ -18,8 +18,6 @@ type UserRepository interface {
 	Create(user *model.User) error
 	GetByID(id uuid.UUID) (*model.User, error)
 	GetByEmail(email string) (*model.User, error)
-	Update(user *model.User) error
-	Delete(id uuid.UUID) error
 }
 
 type userRepository struct {
@@ -78,44 +76,4 @@ func (r *userRepository) GetByEmail(email string) (*model.User, error) {
 	}
 
 	return user, nil
-}
-
-func (r *userRepository) Update(user *model.User) error {
-	query := `
-		UPDATE users 
-		SET email = $2, password_hash = $3, updated_at = $4
-		WHERE id = $1
-		RETURNING id, email, created_at, updated_at
-	`
-
-	err := r.db.QueryRowx(query, user.ID, user.Email, user.PasswordHash, user.UpdatedAt).
-		StructScan(user)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return ErrUserNotFound
-		}
-		return err
-	}
-
-	return nil
-}
-
-func (r *userRepository) Delete(id uuid.UUID) error {
-	query := `DELETE FROM users WHERE id = $1`
-
-	result, err := r.db.Exec(query, id)
-	if err != nil {
-		return err
-	}
-
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		return err
-	}
-
-	if rowsAffected == 0 {
-		return ErrUserNotFound
-	}
-
-	return nil
 }

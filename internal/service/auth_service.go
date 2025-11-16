@@ -70,12 +70,3 @@ func (s *AuthService) Login(email, password string) (*model.User, error) {
 func (s *AuthService) GetUserByID(userID uuid.UUID) (*model.User, error) {
 	return s.userRepo.GetByID(userID)
 }
-
-func (s *AuthService) UpdateUser(user *model.User) error {
-	user.UpdatedAt = time.Now()
-	return s.userRepo.Update(user)
-}
-
-func (s *AuthService) DeleteUser(userID uuid.UUID) error {
-	return s.userRepo.Delete(userID)
-}

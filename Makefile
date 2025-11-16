@@ -57,5 +57,5 @@ clean:
 	docker rmi deviceregistry:dev 2>/dev/null || true
 	rm -rf build/
 
-update:
+update: swagger
 	docker compose up -d --build deviceregistry
