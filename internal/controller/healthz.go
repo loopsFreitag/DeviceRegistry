@@ -17,6 +17,18 @@ var (
 	ErrNotReady = errors.New("not ready")
 )
 
+// HealthResponse represents the response for health check endpoints
+type HealthResponse struct {
+	Status  string `json:"status" example:"OK"`
+	Message string `json:"message,omitempty" example:"Service is healthy"`
+}
+
+// ErrorResponse represents an error response
+type ErrorResponse struct {
+	Status  string `json:"status" example:"error"`
+	Message string `json:"message" example:"Service unavailable"`
+}
+
 // Checker is an interface that defines a dependency service health check.
 type Checker interface {
 	// Check performs the health check and returns an error if the service is unhealthy.
@@ -41,11 +53,9 @@ type DBChecker struct {
 func (d DBChecker) Check() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
-
 	if err := d.db.PingContext(ctx); err != nil {
 		return fmt.Errorf("[DB] %w", ErrNotReady)
 	}
-
 	return nil
 }
 
@@ -72,11 +82,9 @@ type HealthCheckOption func(*HealthCheck)
 // NewHealthCheck creates a new HealthCheck controller.
 func NewHealthCheck(opts ...HealthCheckOption) *HealthCheck {
 	h := &HealthCheck{}
-
 	for _, opt := range opts {
 		opt(h)
 	}
-
 	return h
 }
 
@@ -89,21 +97,41 @@ func (h HealthCheck) SetRoutes(r *mux.Router) {
 	r.HandleFunc("/api/readyz", h.checkReady).Methods(http.MethodGet)
 }
 
-// checkHealth is a handler that checks if the service is healthy.
+// CheckHealth godoc
+// @Summary      Health check endpoint
+// @Description  Check if the service is running
+// @Tags         health
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  HealthResponse
+// @Failure      500  {object}  ErrorResponse
+// @Router       /api/healthz [get]
 func (h HealthCheck) checkHealth(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	if _, err := w.Write([]byte("OK")); err != nil {
+	if _, err := w.Write([]byte(`{"status":"OK","message":"Service is healthy"}`)); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
 
-// checkReady is a handler that checks if the service is ready to handle requests.
+// CheckReady godoc
+// @Summary      Readiness check endpoint
+// @Description  Check if the service and all dependencies (database) are ready to handle requests
+// @Tags         health
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  HealthResponse
+// @Failure      500  {object}  ErrorResponse
+// @Failure      503  {object}  ErrorResponse
+// @Router       /api/readyz [get]
 func (h HealthCheck) checkReady(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	// if the number of checkers increases, this can be further optimized to run in parallel.
 	for _, c := range h.checkers {
 		if err := c.Check(); errors.Is(err, ErrNotReady) {
 			w.WriteHeader(http.StatusServiceUnavailable)
-			if _, err := w.Write([]byte(err.Error())); err != nil {
+			if _, err := w.Write([]byte(`{"status":"error","message":"` + err.Error() + `"}`)); err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 			}
 			return
@@ -111,7 +139,7 @@ func (h HealthCheck) checkReady(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	if _, err := w.Write([]byte("OK")); err != nil {
+	if _, err := w.Write([]byte(`{"status":"OK","message":"Service is ready"}`)); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }

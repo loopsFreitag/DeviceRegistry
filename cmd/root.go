@@ -17,6 +17,20 @@ import (
 	"github.com/spf13/viper"
 )
 
+// @title           Device Registry API
+// @version         1.0
+// @description     Device Registry Platform API
+// @termsOfService  http://swagger.io/terms/
+
+// @contact.name   Guilherme Freitas
+// @contact.email  glfreitas@pm.me
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host      localhost:8081
+// @BasePath  /
+
 var rootCmd = &cobra.Command{
 	Use:   "deviceregistry",
 	Short: "Device Registry Platform",

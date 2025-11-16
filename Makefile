@@ -1,8 +1,9 @@
-.PHONY: help setup build up down restart logs migrate-up migrate-down migrate-status migrate-create shell clean build-docker
+.PHONY: help setup build swagger up down restart logs migrate-up shell clean build-docker update
 
 help:
 	@echo "Available commands:"
 	@echo "  make setup          - Create common-infra network"
+	@echo "  make swagger        - Generate Swagger docs"
 	@echo "  make build          - Build Go binary"
 	@echo "  make build-docker   - Build docker images"
 	@echo "  make up             - Start services (dev profile)"
@@ -10,12 +11,18 @@ help:
 	@echo "  make restart        - Restart deviceregistry service"
 	@echo "  make logs           - View logs"
 	@echo "  make shell          - Open shell in container"
-	@echo "  make migrate-status - Check migration status"
-	@echo "  make migrate-create - Create new migration (name=your_migration_name)"
+	@echo "  make migrate-up     - Migration up"
 	@echo "  make clean          - Remove containers and volumes"
+	@echo "  make update         - Rebuild and update running container"
 
 setup:
 	@docker network create common-infra 2>/dev/null || echo "Network common-infra already exists"
+
+# Generate Swagger documentation
+swagger:
+	@echo "Generating Swagger documentation..."
+	@swag init
+	@echo "Swagger docs generated successfully"
 
 # Build Go binary (called by Dockerfile)
 build:
@@ -42,21 +49,13 @@ logs:
 shell:
 	docker compose exec deviceregistry /bin/sh
 
-migrate-status:
-	docker compose exec deviceregistry ./deviceregistry migrate status
-
-migrate-create:
-	@if [ -z "$(name)" ]; then \
-		echo "Error: name is required. Usage: make migrate-create name=your_migration_name"; \
-		exit 1; \
-	fi
-	@mkdir -p db/migrations
-	goose -dir ./db/migrations create $(name) sql
+migrate-up:
+	docker compose exec deviceregistry ./deviceregistry migrate up
 
 clean:
 	docker compose --profile dev --profile fullstack down -v
 	docker rmi deviceregistry:dev 2>/dev/null || true
 	rm -rf build/
 
-docker-update:
+update:
 	docker compose up -d --build deviceregistry
